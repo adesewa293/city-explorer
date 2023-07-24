@@ -4,9 +4,9 @@ import "./App.css";
 
 function App() {
   const [location, setLocation] = useState({
-    lat: '',
-    lon: '',
-    display_name: ''
+    lat: "",
+    lon: "",
+    display_name: "",
   });
 
   async function handleSubmit(e) {
@@ -18,12 +18,20 @@ function App() {
       setLocation({
         lat,
         lon,
-        display_name
+        display_name,
       });
-    } catch (error) {
-      
-    }
+    } catch (error) {}
   }
+
+  function getMapImageUrl() {
+    const apiKey = process.env.REACT_APP_API_KEY;
+    const lat = location.lat || 54;
+    const lon = location.lon || -2.0;
+    const zoom = location.display_name ? 18 : 7;
+    return `https://maps.locationiq.com/v3/staticmap?key=${apiKey}&center=${lat},${lon}&zoom=${zoom}`;
+  }
+
+  const mapImageUrl = getMapImageUrl();
 
   return (
     <div className="App">
@@ -34,6 +42,7 @@ function App() {
         <p>{location.lon}</p>
         <p>{location.display_name}</p>
       </form>
+      <img src={mapImageUrl} />
     </div>
   );
 }
