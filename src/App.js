@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { getLocationData } from "./locationApi";
 import "./App.css";
+import Header from "./Header/Header";
 
 function App() {
   const [location, setLocation] = useState({
@@ -43,6 +44,7 @@ function App() {
 
   return (
     <div className="App">
+      <Header />
       {error && (
         <div>
           <p>Error code: {error.code}</p>
@@ -50,10 +52,10 @@ function App() {
         </div>
       )}
       <form onSubmit={handleSubmit}>
-        <input type="text" placeholder="enter a city" name="search" />
+        <input type="text" placeholder="Enter a city" name="search" />
         <button>EXPLORE</button>
-        <p>{location.lat}</p>
-        <p>{location.lon}</p>
+        <p>Location latitiude: {location.lat}</p>
+        <p>Location longitude: {location.lon}</p>
         <p>{location.display_name}</p>
       </form>
       <img src={mapImageUrl} alt="map" />
