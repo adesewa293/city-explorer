@@ -42,7 +42,7 @@ function App() {
         <p>{location.lon}</p>
         <p>{location.display_name}</p>
       </form>
-      <img src={mapImageUrl} />
+      <img src={mapImageUrl} alt="map" />
     </div>
   );
 }
