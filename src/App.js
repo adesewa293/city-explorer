@@ -8,19 +8,27 @@ function App() {
     lon: "",
     display_name: "",
   });
+  const [error, setError] = useState(null);
 
   async function handleSubmit(e) {
     e.preventDefault();
     try {
       const input = e.target.search.value;
       const data = await getLocationData(input);
-      const { lat, lon, display_name } = data[0];
-      setLocation({
-        lat,
-        lon,
-        display_name,
+      if (data.length > 0) {
+        const { lat, lon, display_name } = data[0];
+        setLocation({
+          lat,
+          lon,
+          display_name,
+        });
+      }
+    } catch (error) {
+      setError({
+        code: error.response.status,
+        message: error.response.data.error,
       });
-    } catch (error) {}
+    }
   }
 
   function getMapImageUrl() {
@@ -35,6 +43,12 @@ function App() {
 
   return (
     <div className="App">
+      {error && (
+        <div>
+          <p>Error code: {error.code}</p>
+          <p>{error.message}</p>
+        </div>
+      )}
       <form onSubmit={handleSubmit}>
         <input type="text" placeholder="enter a city" name="search" />
         <button>EXPLORE</button>
