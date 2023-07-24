@@ -1,23 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import { getLocationData } from "./locationApi";
+import "./App.css";
 
 function App() {
+  const [location, setLocation] = useState({
+    lat: '',
+    lon: '',
+    display_name: ''
+  });
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    try {
+      const input = e.target.search.value;
+      const data = await getLocationData(input);
+      const { lat, lon, display_name } = data[0];
+      setLocation({
+        lat,
+        lon,
+        display_name
+      });
+    } catch (error) {
+      
+    }
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <form onSubmit={handleSubmit}>
+        <input type="text" placeholder="enter a city" name="search" />
+        <button>EXPLORE</button>
+        <p>{location.lat}</p>
+        <p>{location.lon}</p>
+        <p>{location.display_name}</p>
+      </form>
     </div>
   );
 }
