@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { getLocationData } from "./locationApi";
+import { getLocationData, getWeatherData } from "./locationApi";
 import "./App.css";
 import Header from "./Header/Header";
+import Weather from "./Weather/Weather";
 
 function App() {
   const [location, setLocation] = useState({
@@ -9,6 +10,7 @@ function App() {
     lon: "",
     display_name: "",
   });
+  const [forecasts, setForecasts] = useState([]);
   const [error, setError] = useState(null);
 
   async function handleSubmit(e) {
@@ -23,12 +25,23 @@ function App() {
           lon,
           display_name,
         });
+        const weatherData = await getWeatherData(lat, lon, input);
+        console.log("weatherData", weatherData);
+        setForecasts(weatherData);
       }
     } catch (error) {
-      setError({
-        code: error.response.status,
-        message: error.response.data.error,
-      });
+      if (error.response) {
+        console.log('error.response.data', error.response.data);
+        setError({
+          code: error.response.status,
+          message: error.response.data.error,
+        });
+      } else {
+        setError({
+          code: 500,
+          message: "An error occured, please try again later",
+        });
+      }
     }
   }
 
@@ -58,6 +71,9 @@ function App() {
         <p>Location longitude: {location.lon}</p>
         <p>{location.display_name}</p>
       </form>
+      {forecasts.length > 0 && (
+        <Weather forecasts={forecasts} />
+      )}
       <img src={mapImageUrl} alt="map" />
     </div>
   );
